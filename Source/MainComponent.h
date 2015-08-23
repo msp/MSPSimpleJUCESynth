@@ -11,6 +11,8 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 
+using namespace stk;
+
 
 //==============================================================================
 /*
@@ -34,9 +36,7 @@ public:
     void resized() override;
 
     void sliderValueChanged (Slider* slider) override;
-
-    void updateAngleDelta();
-
+    
 
 private:
     String currentSizeAsString;
@@ -44,7 +44,7 @@ private:
     Slider frequencySlider;
     double currentSampleRate, currentAngle, angleDelta;
 
-
+    SineWave sineWaveGenerator;
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainContentComponent)

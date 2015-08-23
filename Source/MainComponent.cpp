@@ -14,10 +14,14 @@ MainContentComponent::MainContentComponent()
 {
     setSize (800, 600);
 
-    addAndMakeVisible (frequencySlider);
+    sineWaveGenerator.setFrequency(200.0f);
+
+    frequencySlider.setValue(200.0, dontSendNotification);
     frequencySlider.setRange (50.0, 5000.0);
-    frequencySlider.setSkewFactorFromMidPoint (500.0); // [4]
+    frequencySlider.setSkewFactorFromMidPoint (500.0);
     frequencySlider.addListener (this);
+
+    addAndMakeVisible (frequencySlider);
 
     setAudioChannels (0, 1); // no inputs, one output
 
@@ -30,8 +34,7 @@ MainContentComponent::~MainContentComponent()
 
 void MainContentComponent::prepareToPlay (int samplesPerBlockExpected, double sampleRate)
 {
-    currentSampleRate = sampleRate;
-    updateAngleDelta();
+    Stk::setSampleRate(sampleRate);
 }
 
 void MainContentComponent::releaseResources()
@@ -41,13 +44,16 @@ void MainContentComponent::releaseResources()
 void MainContentComponent::getNextAudioBlock (const AudioSourceChannelInfo& bufferToFill)
 {
     const float level = 0.125f;
-    float* const buffer = bufferToFill.buffer->getWritePointer (0, bufferToFill.startSample);
 
-    for (int sample = 0; sample < bufferToFill.numSamples; ++sample)
+    for (int channel = 0; channel < bufferToFill.buffer->getNumChannels(); ++channel)
     {
-        const float currentSample = (float) std::sin (currentAngle);
-        currentAngle += angleDelta;
-        buffer[sample] = currentSample * level;
+        float* const buffer = bufferToFill.buffer->getWritePointer (channel, bufferToFill.startSample);
+
+        for (int sample = 0; sample < bufferToFill.numSamples; ++sample)
+        {
+            StkFloat data = sineWaveGenerator.tick();
+            buffer[sample] = data * level;
+        }
     }
 }
 
@@ -55,15 +61,8 @@ void MainContentComponent::sliderValueChanged (Slider* slider)
 {
     if (slider == &frequencySlider)
     {
-        if (currentSampleRate > 0.0)
-            updateAngleDelta();
+        sineWaveGenerator.setFrequency(frequencySlider.getValue());
     }
-}
-
-void MainContentComponent::updateAngleDelta()
-{
-    const double cyclesPerSample = frequencySlider.getValue() / currentSampleRate; // [2]
-    angleDelta = cyclesPerSample * 2.0 * double_Pi;                                // [3]
 }
 
 void MainContentComponent::paint (Graphics& g)
@@ -91,9 +90,6 @@ void MainContentComponent::paint (Graphics& g)
 
 void MainContentComponent::resized()
 {
-    // This is called when the MainContentComponent is resized.
-    // If you add any child components, this is where you should
-    // update their positions.
     currentSizeAsString = String (getWidth()) + " x " + String (getHeight());
     frequencySlider.setBounds (10, 10, getWidth() - 20, 20);
 

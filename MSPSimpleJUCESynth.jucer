@@ -34,6 +34,8 @@
         <MODULEPATH id="juce_audio_formats" path="../../../vendor/JUCE-OSX/modules"/>
         <MODULEPATH id="juce_audio_processors" path="../../../vendor/JUCE-OSX/modules"/>
         <MODULEPATH id="juce_audio_utils" path="../../../vendor/JUCE-OSX/modules/stk_module/extras/SineWave/JuceLibraryCode/modules"/>
+        <MODULEPATH id="stk_core" path="../../../vendor/JUCE-OSX/modules/stk_module/modules"/>
+        <MODULEPATH id="stk_generators" path="../../../vendor/JUCE-OSX/modules/stk_module/extras/SineWave/JuceLibraryCode/modules"/>
       </MODULEPATHS>
     </XCODE_MAC>
   </EXPORTFORMATS>
@@ -52,6 +54,8 @@
     <MODULES id="juce_gui_extra" showAllCode="1" useLocalCopy="0"/>
     <MODULES id="juce_opengl" showAllCode="1" useLocalCopy="0"/>
     <MODULES id="juce_video" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="stk_core" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="stk_generators" showAllCode="1" useLocalCopy="0"/>
   </MODULES>
   <JUCEOPTIONS/>
 </JUCERPROJECT>
