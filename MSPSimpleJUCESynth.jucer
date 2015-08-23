@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="iWkoGE" name="TestProject001" projectType="guiapp" version="1.0.0"
-              bundleIdentifier="com.yourcompany.TestProject001" includeBinaryInAppConfig="1"
+<JUCERPROJECT id="iWkoGE" name="MSPSimpleJUCESynth" projectType="guiapp" version="1.0.0"
+              bundleIdentifier="org.cenatus.MSPSimpleJUCESynth" includeBinaryInAppConfig="1"
               jucerVersion="3.2.0">
-  <MAINGROUP id="MUiE8y" name="TestProject001">
+  <MAINGROUP id="MUiE8y" name="MSPSimpleJUCESynth">
     <GROUP id="{93862A94-9EBA-7ECA-DEEC-E291D54A8BB0}" name="Source">
       <FILE id="yJCdzX" name="MainComponent.cpp" compile="1" resource="0"
             file="Source/MainComponent.cpp"/>
@@ -15,9 +15,9 @@
     <XCODE_MAC targetFolder="Builds/MacOSX">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" osxSDK="default" osxCompatibility="default" osxArchitecture="default"
-                       isDebug="1" optimisation="1" targetName="TestProject001"/>
+                       isDebug="1" optimisation="1" targetName="MSPSimpleJUCESynth"/>
         <CONFIGURATION name="Release" osxSDK="default" osxCompatibility="default" osxArchitecture="default"
-                       isDebug="0" optimisation="3" targetName="TestProject001"/>
+                       isDebug="0" optimisation="3" targetName="MSPSimpleJUCESynth"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_core" path="../../../vendor/JUCE-OSX/modules"/>
