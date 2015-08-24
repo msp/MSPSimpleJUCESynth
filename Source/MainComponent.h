@@ -46,7 +46,10 @@ private:
 
     SineWave sineWaveGenerator;
 
-    float level = 0.125f;
+    float level = 0.5f;
+    float startFrequency = 500.0f;
+
+    void drawSliders();
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainContentComponent)

@@ -1,45 +1,16 @@
-/*
-  ==============================================================================
-
-    This file was auto-generated!
-
-  ==============================================================================
-*/
-
 #include "MainComponent.h"
 
 
-//==============================================================================
+/*==============================================================================
+ * Constructor / Destructor
+ *=============================================================================*/
 MainContentComponent::MainContentComponent()
 {
     setSize (800, 600);
+    drawSliders();
 
-    sineWaveGenerator.setFrequency(200.0f);
-
-    frequencySlider.setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
-    frequencySlider.setTextBoxStyle (Slider::TextBoxBelow, false, 100, 30);
-    frequencySlider.setBounds(50, 50, 150, 150);
-
-    frequencySlider.setValue(200.0, dontSendNotification);
-    frequencySlider.setRange (50.0, 5000.0);
-    frequencySlider.setSkewFactorFromMidPoint (500.0);
-    frequencySlider.addListener (this);
-
-    addAndMakeVisible (frequencySlider);
-
-    amplitudeSlider.setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
-    amplitudeSlider.setTextBoxStyle (Slider::TextBoxBelow, false, 100, 30);
-    amplitudeSlider.setBounds(50, 250, 150, 150);
-
-    amplitudeSlider.setValue(0.125, dontSendNotification);
-    amplitudeSlider.setRange (0.0, 0.5);
-    amplitudeSlider.setSkewFactorFromMidPoint (0.2);
-    amplitudeSlider.addListener (this);
-
-    addAndMakeVisible (amplitudeSlider);
-
-    setAudioChannels (0, 1); // no inputs, one output
-
+    sineWaveGenerator.setFrequency(startFrequency);
+    setAudioChannels (0, 2);
 }
 
 MainContentComponent::~MainContentComponent()
@@ -47,6 +18,9 @@ MainContentComponent::~MainContentComponent()
     shutdownAudio();
 }
 
+/*==============================================================================
+ * AudioAppComponent overrides
+ *=============================================================================*/
 void MainContentComponent::prepareToPlay (int samplesPerBlockExpected, double sampleRate)
 {
     Stk::setSampleRate(sampleRate);
@@ -58,17 +32,20 @@ void MainContentComponent::releaseResources()
 
 void MainContentComponent::getNextAudioBlock (const AudioSourceChannelInfo& bufferToFill)
 {
-    for (int channel = 0; channel < bufferToFill.buffer->getNumChannels(); ++channel)
+    for (int sample = 0; sample < bufferToFill.numSamples; ++sample)
     {
-        float* const buffer = bufferToFill.buffer->getWritePointer (channel, bufferToFill.startSample);
-
-        for (int sample = 0; sample < bufferToFill.numSamples; ++sample)
+		StkFloat data = sineWaveGenerator.tick();
+        for (int channel = 0; channel < bufferToFill.buffer->getNumChannels(); ++channel)
         {
-            StkFloat data = sineWaveGenerator.tick();
-            buffer[sample] = data * level;
+            float* const buffer = bufferToFill.buffer->getWritePointer (channel, bufferToFill.startSample);
+			buffer[sample] = data * level;
         }
-    }
+	}
 }
+
+/*==============================================================================
+ * Listener events
+ *=============================================================================*/
 
 void MainContentComponent::sliderValueChanged (Slider* slider)
 {
@@ -82,11 +59,15 @@ void MainContentComponent::sliderValueChanged (Slider* slider)
     }
 }
 
+/*==============================================================================
+ * GUI
+ *=============================================================================*/
+
 void MainContentComponent::paint (Graphics& g)
 {
     g.fillAll (Colours::transparentBlack);
-    g.setFont (Font ("Times New Roman", 20.0f, Font::plain));
-    g.setColour (Colours::darkblue);
+    g.setFont (Font ("Helvetica", 20.0f, Font::plain));
+    g.setColour (Colours::black);
     g.drawText (currentSizeAsString, getLocalBounds(), Justification::centredBottom, true);
 
 //    g.setColour (Colours::green);
@@ -107,6 +88,32 @@ void MainContentComponent::paint (Graphics& g)
 void MainContentComponent::resized()
 {
     currentSizeAsString = String (getWidth()) + " x " + String (getHeight());
-//    frequencySlider.setBounds (10, 10, getWidth() - 20, 20);
+    frequencySlider.setBounds(50, 50, 150, 150);
+    amplitudeSlider.setBounds(50, 250, 150, 150);
+}
 
+/*==============================================================================
+ * Util
+ *=============================================================================*/
+void MainContentComponent::drawSliders()
+{
+    frequencySlider.setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
+    frequencySlider.setTextBoxStyle (Slider::TextBoxBelow, false, 100, 30);
+
+    frequencySlider.setRange (50.0, 5000.0);
+    frequencySlider.setValue(startFrequency, dontSendNotification);
+    frequencySlider.setSkewFactorFromMidPoint (500.0);
+    frequencySlider.addListener (this);
+
+    addAndMakeVisible (frequencySlider);
+
+    amplitudeSlider.setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
+    amplitudeSlider.setTextBoxStyle (Slider::TextBoxBelow, false, 100, 30);
+
+    amplitudeSlider.setRange (0.0, 1.0);
+    amplitudeSlider.setValue(level, dontSendNotification);
+    amplitudeSlider.setSkewFactorFromMidPoint (0.5);
+    amplitudeSlider.addListener (this);
+
+    addAndMakeVisible (amplitudeSlider);
 }
