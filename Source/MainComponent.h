@@ -41,13 +41,32 @@ public:
 private:
     String currentSizeAsString;
 
-    Slider frequencySlider;
-    Slider amplitudeSlider;
+    Slider osc1FrequencySlider;
+    Slider osc1AmplitudeSlider;
 
-    SineWave sineWaveGenerator;
+    Slider osc2FrequencySlider;
+    Slider osc2AmplitudeSlider;
 
-    float level = 0.5f;
-    float startFrequency = 500.0f;
+    Slider osc3FrequencySlider;
+    Slider osc3AmplitudeSlider;
+
+    SineWave osc1Generator;
+    SineWave osc2Generator;
+    SineWave osc3Generator;
+
+    float osc1Level = 0.5f;
+    float osc1StartFrequency = 500.0f;
+
+    float osc2Level = 0.0f;
+    float osc2StartFrequency = 522.0f;
+
+    float osc3Level = 0.0f;
+    float osc3StartFrequency = 544.0f;
+
+    const int oscSize = 150;
+    const int oscLeftMargin = 50;
+    const int oscTopMargin = 50;
+    const int numberOsc = 3;
 
     void drawSliders();
 
